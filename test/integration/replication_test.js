@@ -8,9 +8,12 @@ var opts = require('browserify-getopts');
 
 var db1 = opts.db1 || 'testdb1';
 var db2 = opts.db2 || 'testdb2';
-var db3 = opts.db2 || 'testdb3';
+var db3 = opts.db3 || 'testdb3';
 
 var test = require('wrapping-tape')(utils.setupDb(db1, db2, db3));
+
+// :DEBUG: add HTTPL adapter
+Pouch.adapter('httpl', Pouch.adapters['http']);
 
 test('Replicate without creating src', function(t) {
   t.plan(2);

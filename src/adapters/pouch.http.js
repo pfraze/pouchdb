@@ -61,7 +61,7 @@ parseUri.options = {
 // return it as a suitable object.
 function getHost(name, opts) {
   // If the given name contains "http:"
-  if (/http(s?):/.test(name)) {
+  if (/http(s|l)?:/.test(name)) {
     // Prase the URI into all its little bits
     var uri = parseUri(name);
 
@@ -86,11 +86,11 @@ function getHost(name, opts) {
     uri.path = parts.join('/');
     opts = opts || {};
     uri.headers = opts.headers || {};
-    
-    if (opts.auth || uri.auth) { 
+
+    if (opts.auth || uri.auth) {
       var nAuth = opts.auth || uri.auth;
       var token = PouchUtils.btoa(nAuth.username + ':' + nAuth.password);
-      uri.headers.Authorization = 'Basic ' + token; 
+      uri.headers.Authorization = 'Basic ' + token;
     }
 
     if (opts.headers) {
@@ -115,7 +115,7 @@ function genDBUrl(opts, path) {
     var pathDel = !opts.path ? '' : '/';
 
     // Return the URL made up of all the host's information and the given path
-    return opts.protocol + '://' + opts.host + ':' + opts.port + '/' +
+    return opts.protocol + '://' + /*opts.host + ((opts.port) ? (':'  + opts.port) : '')*/opts.authority + '/' +
       opts.path + pathDel + opts.db + '/' + path;
   }
 
@@ -133,7 +133,7 @@ function genUrl(opts, path) {
 
     // If the host already has a path, then we need to have a path delimiter
     // Otherwise, the path delimiter is the empty string
-    return opts.protocol + '://' + opts.host + ':' + opts.port + '/' + opts.path + pathDel + path;
+    return opts.protocol + '://' + /*opts.host + ':' + opts.port*/opts.authority + '/' + opts.path + pathDel + path;
   }
 
   return '/' + path;
@@ -707,7 +707,7 @@ function HttpPouch(opts, callback) {
         }
       };
     }
-    
+
     if (opts.since === 'latest') {
       var changes;
       api.info(function (err, info) {
@@ -941,7 +941,7 @@ function HttpPouch(opts, callback) {
       api.taskqueue.addTask('replicateOnServer', arguments);
       return promise;
     }
-    
+
     var targetHost = getHost(target.id());
     var params = {
       source: host.db,

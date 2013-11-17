@@ -1,0 +1,28 @@
+<html>
+<head></head>
+<body>
+<script src="/local.js"></script>
+<script>
+var relay = local.joinRelay('https://grimwire.net', { log: true });
+relay.on('accessGranted', function() {
+	sessionStorage.setItem('access-token', relay.getAccessToken());
+	relay.startListening();
+	var s = document.createElement("script");
+	s.type = "text/javascript"; s.src = "basics_test.js";
+	document.head.appendChild(s);
+});
+relay.on('accessInvalid', function() {
+	relay.requestAccessToken();
+	relay.on('accessGranted', function() { window.location.reload(); });
+});
+if (!sessionStorage.getItem('access-token')) {
+	relay.requestAccessToken();
+	relay.on('accessGranted', function() { window.location.reload(); });
+} else {
+	relay.setAccessToken(sessionStorage.getItem('access-token'));
+}
+local.patchXHR();
+</script>
+<!-- <script src="basics_test.js"></script> -->
+</body>
+</html>

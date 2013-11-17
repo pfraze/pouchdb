@@ -9,6 +9,9 @@ var opts = require('browserify-getopts');
 var db1 = opts.db1 || 'testdb';
 var test = require('wrapping-tape')(utils.setupDb(db1));
 
+// :DEBUG: add HTTPL adapter
+Pouch.adapter('httpl', Pouch.adapters['http']);
+
 test('Create a Pouch', 1, function(t) {
   new PouchDB(db1, function(err, db) {
     t.ok(!err, 'Created');

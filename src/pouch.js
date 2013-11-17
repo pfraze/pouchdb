@@ -164,7 +164,7 @@ Pouch.removeFromAllDbs = function(opts, callback) {
 
   // skip http and https adaptors for allDbs
   var adapter = opts.adapter;
-  if (adapter === "http" || adapter === "https") {
+  if (adapter === "http" || adapter === "https" || adapter === "httpl") {
     callback();
     return;
   }
@@ -229,7 +229,7 @@ Pouch.open = function(opts, callback) {
 
   var adapter = opts.adapter;
   // skip http and https adaptors for allDbs
-  if (adapter === "http" || adapter === "https") {
+  if (adapter === "http" || adapter === "https" || adapter === "httpl") {
     callback();
     return;
   }
@@ -288,7 +288,7 @@ Pouch.allDbs = function(callback) {
     var adapter = adapters.shift();
 
     // skip http and https adaptors for allDbs
-    if (adapter === "http" || adapter === "https") {
+    if (adapter === "http" || adapter === "https" || adapter === "httpl") {
       accumulate(adapters, all_dbs);
       return;
     }
